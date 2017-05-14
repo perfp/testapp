@@ -3,3 +3,4 @@ obj/
 *-publish/
 *.nupkg
 .vs/
+.vscode/

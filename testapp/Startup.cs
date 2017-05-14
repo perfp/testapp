@@ -7,13 +7,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace testapp
 {
     public class Startup
     {
+        ILogger log;
         public Startup(IHostingEnvironment env)
         {
+            DebugLogger startupLogger = new DebugLogger("Startup");
+            startupLogger.LogInformation("Startup()");
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -34,8 +39,12 @@ namespace testapp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            log = loggerFactory.CreateLogger("startup");
+            log.LogInformation("Application starting");
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            
 
             app.UseMvc();
         }
